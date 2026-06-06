@@ -9,11 +9,13 @@ import {
 } from "../../schemas/auth.schema";
 import InputField from "./InputField";
 import GoogleLoginButton from "./GoogleLoginButton";
+import FacebookLoginButton from "./FacebookLoginButton";
 
 interface RegisterFormProps {
   loading: boolean;
   onSubmit: (data: RegisterFormData) => void;
   onGoogleLogin: (credential: string) => void;
+  onFacebookLogin: (accessToken: string) => void;
   onSwitchToLogin: () => void;
 }
 
@@ -21,6 +23,7 @@ export default function RegisterForm({
   loading,
   onSubmit,
   onGoogleLogin,
+  onFacebookLogin,
   onSwitchToLogin,
 }: RegisterFormProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -184,6 +187,10 @@ export default function RegisterForm({
         loading={loading}
         label="Google"
       />
+
+      <div className="mt-3">
+        <FacebookLoginButton onSuccess={onFacebookLogin} loading={loading} />
+      </div>
 
       <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">
         Đã có tài khoản?{" "}

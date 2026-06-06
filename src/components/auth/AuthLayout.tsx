@@ -13,7 +13,7 @@ import type {
 
 export default function AuthLayout() {
   const [mode, setMode] = useState<AuthMode>("login");
-  const { loading, login, register, googleLogin } = useAuth();
+  const { loading, login, register, googleLogin, facebookLogin } = useAuth();
 
   function handleLogin(data: LoginFormData) {
     login({ email: data.email, password: data.password });
@@ -114,6 +114,7 @@ export default function AuthLayout() {
                     loading={loading}
                     onSubmit={handleLogin}
                     onGoogleLogin={googleLogin}
+                    onFacebookLogin={facebookLogin}
                     onSwitchToRegister={() => setMode("register")}
                   />
                 ) : (
@@ -122,6 +123,7 @@ export default function AuthLayout() {
                     loading={loading}
                     onSubmit={handleRegister}
                     onGoogleLogin={googleLogin}
+                    onFacebookLogin={facebookLogin}
                     onSwitchToLogin={() => setMode("login")}
                   />
                 )}

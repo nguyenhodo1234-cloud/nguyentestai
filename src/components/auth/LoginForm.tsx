@@ -6,11 +6,13 @@ import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { loginSchema, type LoginFormData } from "../../schemas/auth.schema";
 import InputField from "./InputField";
 import GoogleLoginButton from "./GoogleLoginButton";
+import FacebookLoginButton from "./FacebookLoginButton";
 
 interface LoginFormProps {
   loading: boolean;
   onSubmit: (data: LoginFormData) => void;
   onGoogleLogin: (credential: string) => void;
+  onFacebookLogin: (accessToken: string) => void;
   onSwitchToRegister: () => void;
 }
 
@@ -18,6 +20,7 @@ export default function LoginForm({
   loading,
   onSubmit,
   onGoogleLogin,
+  onFacebookLogin,
   onSwitchToRegister,
 }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -123,6 +126,10 @@ export default function LoginForm({
       </div>
 
       <GoogleLoginButton onSuccess={onGoogleLogin} loading={loading} />
+
+      <div className="mt-3">
+        <FacebookLoginButton onSuccess={onFacebookLogin} loading={loading} />
+      </div>
 
       <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
         Chưa có tài khoản?{" "}

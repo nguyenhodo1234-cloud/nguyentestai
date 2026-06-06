@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { authApi } from "../services/api";
 import { googleLoginAPI } from "../services/googleAuth";
+import { facebookLoginAPI } from "../services/facebookAuth";
 
 export function useAuth() {
   const [loading, setLoading] = useState(false);
@@ -67,5 +68,22 @@ export function useAuth() {
     }
   }, []);
 
-  return { loading, error, user, login, register, googleLogin };
+  // Facebook Login
+  const facebookLogin = useCallback(async (accessToken: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await facebookLoginAPI(accessToken);
+      saveToken(res.token);
+      setUser(res.user);
+      alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+    } catch (err: any) {
+      setError(err.message);
+      alert(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { loading, error, user, login, register, googleLogin, facebookLogin };
 }
