@@ -10,8 +10,14 @@ export function useAuth() {
     null,
   );
 
-  const saveToken = (token: string) =>
+  const saveToken = (
+    token: string,
+    userData: { fullName: string; email: string; role?: string },
+  ) => {
     localStorage.setItem("auth_token", token);
+    localStorage.setItem("auth_user", JSON.stringify(userData));
+    setUser(userData);
+  };
 
   const login = useCallback(
     async (data: { email: string; password: string }) => {
@@ -19,8 +25,7 @@ export function useAuth() {
       setError(null);
       try {
         const res = await authApi.login(data);
-        saveToken(res.token);
-        setUser(res.user);
+        saveToken(res.token, res.user);
         alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
       } catch (err: any) {
         setError(err.message);
@@ -38,8 +43,7 @@ export function useAuth() {
       setError(null);
       try {
         const res = await authApi.register(data);
-        saveToken(res.token);
-        setUser(res.user);
+        saveToken(res.token, res.user);
         alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
       } catch (err: any) {
         setError(err.message);
@@ -57,8 +61,7 @@ export function useAuth() {
     setError(null);
     try {
       const res = await googleLoginAPI(credential);
-      saveToken(res.token);
-      setUser(res.user);
+      saveToken(res.token, res.user);
       alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
     } catch (err: any) {
       setError(err.message);
@@ -74,8 +77,7 @@ export function useAuth() {
     setError(null);
     try {
       const res = await facebookLoginAPI(accessToken);
-      saveToken(res.token);
-      setUser(res.user);
+      saveToken(res.token, res.user);
       alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
     } catch (err: any) {
       setError(err.message);
