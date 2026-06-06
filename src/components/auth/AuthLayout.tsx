@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { useMockAuth } from "../../hooks/useMockAuth";
+import { useAuth } from "../../hooks/useMockAuth";
 import AuthSwitch from "./AuthSwitch";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
@@ -13,7 +13,7 @@ import type {
 
 export default function AuthLayout() {
   const [mode, setMode] = useState<AuthMode>("login");
-  const { loading, login, register } = useMockAuth();
+  const { loading, login, register } = useAuth();
 
   function handleLogin(data: LoginFormData) {
     login({ email: data.email, password: data.password });

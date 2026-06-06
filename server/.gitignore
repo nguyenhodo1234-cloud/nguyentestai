@@ -1,0 +1,9 @@
+# Server
+server/
+
+# Node modules
+node_modules/
+dist/
+
+# Environment
+.env
