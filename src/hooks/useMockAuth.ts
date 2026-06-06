@@ -15,15 +15,17 @@ export function useAuth() {
   const saveToken = (
     token: string,
     userData: { fullName: string; email: string; role?: string },
-  ) => {
+  ): boolean => {
     localStorage.setItem("auth_token", token);
     localStorage.setItem("auth_user", JSON.stringify(userData));
     setUser(userData);
 
-    // Nếu là admin → chuyển sang dashboard
+    // Admin → redirect luôn, không báo
     if (userData.role === "admin") {
-      setTimeout(() => navigate("/dashboard"), 500);
+      navigate("/dashboard");
+      return false;
     }
+    return true;
   };
 
   const login = useCallback(
@@ -32,8 +34,9 @@ export function useAuth() {
       setError(null);
       try {
         const res = await authApi.login(data);
-        saveToken(res.token, res.user);
-        alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+        if (saveToken(res.token, res.user)) {
+          alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+        }
       } catch (err: any) {
         setError(err.message);
         alert(`❌ ${err.message}`);
@@ -50,8 +53,9 @@ export function useAuth() {
       setError(null);
       try {
         const res = await authApi.register(data);
-        saveToken(res.token, res.user);
-        alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+        if (saveToken(res.token, res.user)) {
+          alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+        }
       } catch (err: any) {
         setError(err.message);
         alert(`❌ ${err.message}`);
@@ -68,8 +72,9 @@ export function useAuth() {
     setError(null);
     try {
       const res = await googleLoginAPI(credential);
-      saveToken(res.token, res.user);
-      alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+      if (saveToken(res.token, res.user)) {
+        alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+      }
     } catch (err: any) {
       setError(err.message);
       alert(`❌ ${err.message}`);
@@ -84,8 +89,9 @@ export function useAuth() {
     setError(null);
     try {
       const res = await facebookLoginAPI(accessToken);
-      saveToken(res.token, res.user);
-      alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+      if (saveToken(res.token, res.user)) {
+        alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+      }
     } catch (err: any) {
       setError(err.message);
       alert(`❌ ${err.message}`);
