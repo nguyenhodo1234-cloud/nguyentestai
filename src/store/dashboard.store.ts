@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface SidebarState {
   collapsed: boolean;
@@ -19,18 +19,33 @@ interface ThemeState {
   toggle: () => void;
 }
 
-export const useThemeStore = create<ThemeState>((set) => ({
-  dark: localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches,
-  toggle: () =>
-    set((s) => {
-      const next = !s.dark;
-      localStorage.setItem('theme', next ? 'dark' : 'light');
-      if (next) document.documentElement.classList.add('dark');
-      else document.documentElement.classList.remove('dark');
-      return { dark: next };
-    }),
-}));
+export const useThemeStore = create<ThemeState>((set) => {
+  const initDark = () => {
+    const stored = localStorage.getItem("dashboard_theme");
+    if (stored) return stored === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  };
 
-// Init theme on load
-const dark = localStorage.getItem('theme') === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches;
-if (dark) document.documentElement.classList.add('dark');
+  const applyTheme = (dark: boolean) => {
+    if (dark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  // Apply on init
+  const initial = initDark();
+  applyTheme(initial);
+
+  return {
+    dark: initial,
+    toggle: () =>
+      set((s) => {
+        const next = !s.dark;
+        localStorage.setItem("dashboard_theme", next ? "dark" : "light");
+        applyTheme(next);
+        return { dark: next };
+      }),
+  };
+});
