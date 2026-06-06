@@ -5,7 +5,11 @@ import { useTranslation } from "../../i18n/LanguageContext";
 import LanguageDropdown from "../ui/LanguageDropdown";
 import ThemeToggle from "../ui/ThemeToggle";
 
-export default function Header() {
+interface HeaderProps {
+  onNavigateAuth?: () => void;
+}
+
+export default function Header({ onNavigateAuth }: HeaderProps) {
   const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -79,13 +83,15 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-2">
             <LanguageDropdown />
             <ThemeToggle />
-            <a
-              href="/login"
-              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors duration-200"
-            >
-              <LogIn size={16} />
-              <span>{t("header.login")}</span>
-            </a>
+            {onNavigateAuth && (
+              <button
+                onClick={onNavigateAuth}
+                className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-400 transition-colors duration-200"
+              >
+                <LogIn size={16} />
+                <span>{t("header.login")}</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile actions */}
@@ -155,14 +161,18 @@ export default function Header() {
                   ))}
                 </div>
                 <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-                  <a
-                    href="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
-                  >
-                    <LogIn size={16} />
-                    <span>{t("header.login")}</span>
-                  </a>
+                  {onNavigateAuth && (
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        onNavigateAuth();
+                      }}
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                    >
+                      <LogIn size={16} />
+                      <span>{t("header.login")}</span>
+                    </button>
+                  )}
                 </div>
               </nav>
             </motion.div>
