@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/admin.js";
+import googleAuthRoutes from "./routes/googleAuth.js";
 import { ROLES } from "./models/User.js";
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(express.json());
 
 // ── Routes ─────────────────────────────────────
 app.use("/api/auth", authRoutes);
+app.use("/api/auth/google", googleAuthRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Public: danh sách roles

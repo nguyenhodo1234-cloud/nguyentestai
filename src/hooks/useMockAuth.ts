@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { authApi } from "../services/api";
+import { googleLoginAPI } from "../services/googleAuth";
 
 export function useAuth() {
   const [loading, setLoading] = useState(false);
@@ -8,10 +9,8 @@ export function useAuth() {
     null,
   );
 
-  // Lưu token vào localStorage
   const saveToken = (token: string) =>
     localStorage.setItem("auth_token", token);
-  const getToken = () => localStorage.getItem("auth_token");
 
   const login = useCallback(
     async (data: { email: string; password: string }) => {
@@ -51,5 +50,22 @@ export function useAuth() {
     [],
   );
 
-  return { loading, error, user, login, register };
+  // Google Login
+  const googleLogin = useCallback(async (credential: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await googleLoginAPI(credential);
+      saveToken(res.token);
+      setUser(res.user);
+      alert(`✅ ${res.message}\nChào ${res.user.fullName}!`);
+    } catch (err: any) {
+      setError(err.message);
+      alert(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { loading, error, user, login, register, googleLogin };
 }
