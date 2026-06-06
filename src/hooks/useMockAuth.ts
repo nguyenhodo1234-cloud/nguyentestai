@@ -1,9 +1,11 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
 import { googleLoginAPI } from "../services/googleAuth";
 import { facebookLoginAPI } from "../services/facebookAuth";
 
 export function useAuth() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<{ fullName: string; email: string } | null>(
@@ -17,6 +19,11 @@ export function useAuth() {
     localStorage.setItem("auth_token", token);
     localStorage.setItem("auth_user", JSON.stringify(userData));
     setUser(userData);
+
+    // Nếu là admin → chuyển sang dashboard
+    if (userData.role === "admin") {
+      setTimeout(() => navigate("/dashboard"), 500);
+    }
   };
 
   const login = useCallback(
